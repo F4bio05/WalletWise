@@ -43,7 +43,7 @@ export default function Categories() {
     .channel("custom-insert-channel")
     .on(
       "postgres_changes",
-      { event: "INSERT", schema: "public", table: "movements" },
+      { event: "*", schema: "public", table: "categories" },
       (payload) => {
         fetchCategories();
       }
@@ -69,6 +69,7 @@ export default function Categories() {
         setCurrentCategory(data[0] as categoryType);
         // fetchAllMovements(data[0] as categoryType);
         fetchAllMovements();
+        console.log(data);
       }
     } catch (error) {
       console.error("error", error);

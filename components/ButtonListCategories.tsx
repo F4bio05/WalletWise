@@ -20,7 +20,7 @@ export function ButtonListCategories({
   const { theme } = useContext(ThemeContext);
 
   return (
-    <View className="w-full flex flex-row justify-start items-center gap-4">
+    <View className="w-full flex flex-nowrap flex-row justify-start items-center gap-4 overflow-scroll">
       {components.map(
         (component, index) => (
           (

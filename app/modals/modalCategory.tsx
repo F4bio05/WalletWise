@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { PlatformPressable } from "@react-navigation/elements";
-import { Dimensions, ScrollView, View } from "react-native";
+import {
+  Alert,
+  Dimensions,
+  Keyboard,
+  ScrollView,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -22,13 +29,17 @@ import { categoriesType } from "@/types/categories";
 import { ThemedIcon } from "@/components/ThemedIcon";
 import { MyButton } from "@/components/MyButton";
 import { ThemedAnimatedView } from "@/components/ThemedAnimatedView";
-import { set } from "date-fns";
+import { Input } from "@/components/Input";
 
 export default function modalShowEvents() {
   const { supabase } = useSupabase();
   const [categories, setCategories] = useState<categoriesType>();
 
-  const [currentColor, setCurrentColor] = useState<returnedResults["hex"] |undefined>();
+  // CREATE CATEGORY VARIABLES
+  const [currentColor, setCurrentColor] = useState<
+    returnedResults["hex"] | undefined
+  >();
+  const [newCategoryName, setNewCategoryName] = useState<string>("");
 
   const { width, height } = Dimensions.get("window");
 
@@ -59,15 +70,43 @@ export default function modalShowEvents() {
     }
   };
 
-  const removeCategory = async (id: number) => {
+  const createCategory = async () => {
+    if (!newCategoryName || !currentColor) { 
+      Alert.alert("Errore", "Inserisci un nome e un colore per la categoria");
+      reset();
+      return;
+    } 
+
     const { data, error } = await supabase
       .from("categories")
-      .delete()
-      .match({ id });
+      .insert([{ name: newCategoryName, color: currentColor }]);
 
     if (error) {
       console.error(error);
     } else {
+      fetchCategories();
+      reset();
+    }
+  }
+
+  const reset = () => {
+    setNewCategoryName("");
+    setCurrentColor(undefined);
+    changeView();
+    setListView(true);
+  }
+
+  const removeCategory = async (id: number) => {
+    console.log(id);
+    const { data, error } = await supabase
+      .from("categories")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error(error);
+    } else {
+      console.log(data);
       fetchCategories();
     }
   };
@@ -79,7 +118,7 @@ export default function modalShowEvents() {
   const setColorCategory = (hex: returnedResults) => {
     console.log(hex);
     setCurrentColor(hex.hex);
-  }
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -96,106 +135,127 @@ export default function modalShowEvents() {
   }, [listView]);
 
   return (
-    <ThemedView
-      className="h-full flex flex-col justify-start items-center rounded-t-3xl "
-      typeView="secondary"
-    >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ThemedView
-        className="w-20 h-1.5 fixed top-2 rounded-full opacity-70"
-        typeView="text"
-      />
+        className="h-full flex flex-col justify-start items-center rounded-t-3xl "
+        typeView="secondary"
+      >
+        <ThemedView
+          className="w-20 h-1.5 fixed top-2 rounded-full opacity-70"
+          typeView="text"
+        />
 
-      <View className="flex flex-row h-full ">
-        <ThemedAnimatedView
-          style={AnimatedCategoriesList}
-          typeView="secondary"
-          className="w-full fixed top-6 rounded-t-3xl"
-        >
-          <ThemedText className="w-full px-5 text-3xl text-left opacity-50">
-            Gestisci categorie
-          </ThemedText>
-
-          <ScrollView
-            contentContainerClassName=" items-start justify-center gap-4"
-            className="flex-1 w-full relative top-6"
+        <View className="flex flex-row h-full ">
+          <ThemedAnimatedView
+            style={AnimatedCategoriesList}
+            typeView="secondary"
+            className="w-full fixed top-6 rounded-t-3xl"
           >
-            {
-              // here we will render the categories
-              categories?.map((category, index) => (
-                <ThemedView
-                  key={index}
-                  className="w-full flex flex-row justify-between items-center px-6"
-                  typeView="secondary"
-                >
-                  <ThemedView
-                    className="flex flex-row justify-start items-center gap-2"
-                    typeView="secondary"
-                  >
-                    <View
-                      className="w-2 h-14"
-                      style={{ backgroundColor: category.color }}
-                    />
-
-                    <ThemedText className="text-xl font-bold">
-                      {category.name}
-                    </ThemedText>
-                  </ThemedView>
-                  <PlatformPressable
-                    onPress={() => {
-                      removeCategory(category.id);
-                    }}
-                  >
-                    <ThemedIcon icon="Trash2" size={24} typeIcon="red" />
-                  </PlatformPressable>
-                </ThemedView>
-              ))
-            }
-          </ScrollView>
-          <View className="w-full px-5 pb-5 absolute bottom-20 z-50">
-            <MyButton
-              title="Nuova categoria"
-              onPress={() => {
-                changeView();
-              }}
-            />
-          </View>
-        </ThemedAnimatedView>
-
-        <ThemedAnimatedView
-          style={AnimatedCategoryCreate}
-          typeView="secondary"
-          className="w-full fixed top-6 px-6 rounded-t-3xl"
-        >
-          <View className="w-full flex flex-row justify-between items-center ">
-            <ThemedText className="text-3xl  opacity-50">
-              Nuova categoria
+            <ThemedText className="w-full px-5 text-3xl text-left opacity-50">
+              Gestisci categorie
             </ThemedText>
 
-            <PlatformPressable
-              onPress={() => {
-                changeView();
-              }}
-              className="text-center"
+            <ScrollView
+              contentContainerClassName=" items-start justify-center gap-4"
+              className="flex-1 w-full relative top-6"
             >
-              <ThemedText typeText="text" className="text-lg">
-                Back
-              </ThemedText>
-            </PlatformPressable>
-          </View>
+              {
+                // here we will render the categories
+                categories?.map((category, index) => (
+                  <ThemedView
+                    key={index}
+                    className="w-full flex flex-row justify-between items-center px-6"
+                    typeView="secondary"
+                  >
+                    <ThemedView
+                      className="flex flex-row justify-start items-center gap-2"
+                      typeView="secondary"
+                    >
+                      <View
+                        className="w-2 h-14"
+                        style={{ backgroundColor: category.color }}
+                      />
 
-          <View className="w-full flex justify-center items-center pt-5">
-            <ColorPicker
-              value={currentColor}
-              onComplete={(color) => setColorCategory(color)}
-              style={{ gap: 10, flexDirection: "column", alignItems: "center", justifyContent: "center" }}
-            >
-              <Panel1 style={{ width: 150, height: 150, overflow: "hidden"}} boundedThumb />
-              <HueSlider style={{width: 200}} />
-              <Swatches />
-            </ColorPicker>
-          </View>
-        </ThemedAnimatedView>
-      </View>
-    </ThemedView>
+                      <ThemedText className="text-xl font-bold">
+                        {category.name}
+                      </ThemedText>
+                    </ThemedView>
+                    <PlatformPressable
+                      onPress={() => {
+                        removeCategory(category.id);
+                      }}
+                    >
+                      <ThemedIcon icon="Trash2" size={24} typeIcon="red" />
+                    </PlatformPressable>
+                  </ThemedView>
+                ))
+              }
+            </ScrollView>
+            <View className="w-full px-5 pb-5 absolute bottom-20 z-50">
+              <MyButton
+                title="Nuova categoria"
+                onPress={() => {
+                  changeView();
+                }}
+              />
+            </View>
+          </ThemedAnimatedView>
+
+          <ThemedAnimatedView
+            style={AnimatedCategoryCreate}
+            typeView="secondary"
+            className="w-full fixed top-6 px-6 rounded-t-3xl"
+          >
+            <View className="w-full flex flex-row justify-between items-center ">
+              <ThemedText className="text-3xl  opacity-50">
+                Nuova categoria
+              </ThemedText>
+
+              <PlatformPressable
+                onPress={() => {
+                  changeView();
+                }}
+                className="text-center"
+              >
+                <ThemedText typeText="text" className="text-lg">
+                  Back
+                </ThemedText>
+              </PlatformPressable>
+            </View>
+
+            <View className="w-full flex justify-center items-center pt-12 px-4">
+              <Input
+                placeholder="Nome categoria"
+                value={newCategoryName}
+                setValue={(name) => setNewCategoryName(name)}
+                modal={false}
+              />
+            </View>
+
+            <View className="w-full flex justify-center items-center pt-14">
+              <ColorPicker
+                value={currentColor}
+                onComplete={(color) => setColorCategory(color)}
+                style={{
+                  gap: 10,
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {/* <Panel1 style={{ width: 150, height: 150, overflow: "hidden"}} boundedThumb />
+              <HueSlider style={{width: 200}} /> */}
+                <Swatches style={{ width: 250 }} />
+                <Preview style={{ width: 160 }} hideInitialColor />
+              </ColorPicker>
+            </View>
+
+            <View className="w-full flex justify-center items-center pt-14">
+              <MyButton title="Crea categoria" onPress={() => createCategory()} />
+            </View>
+          </ThemedAnimatedView>
+        </View>
+      </ThemedView>
+    </TouchableWithoutFeedback>
   );
 }

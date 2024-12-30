@@ -22,6 +22,7 @@ export type ThemedTextProps = TextProps & {
   capitalize?: "none" | "sentences" | "words" | "characters";
   modal?: boolean;
   iconName?: string | null;
+  typeInput?: "text" | "primary" | "secondary" | "background" | "tabIconSelected" | "green" | "red"
 };
 
 export function Input({
@@ -35,17 +36,18 @@ export function Input({
   capitalize = "sentences",
   modal = false,
   iconName = null,
+  typeInput = "text",
   ...rest
 }: ThemedTextProps) {
   const { theme } = useContext(ThemeContext);
   const colorText = useThemeColor(
     { theme: theme },
-    "text"
+    typeInput
   );
 
   const colorButton = useThemeColor(
     { theme: theme },
-    modal ? "background" : "secondary"
+    modal ? "text" : "secondary"
   );
 
   return (
