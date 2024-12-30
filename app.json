@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "WalletWise",
-    "slug": "WalletWise",
+    "slug": "walletwise",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "walletwise",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -36,6 +36,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "97a4bfed-7a40-4a2d-9bba-3b80c3b891b1"
+      }
+    },
+    "owner": "f4bio"
   }
 }

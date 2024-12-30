@@ -1,0 +1,1 @@
+export type colorsType = "text" | "primary" | "secondary" | "background" | "tabIconSelected" | "green" | "red"
