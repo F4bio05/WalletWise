@@ -183,15 +183,15 @@ export default function modalShowEvents() {
             </PlatformPressable>
           </View>
 
-          <View>
+          <View className="w-full flex justify-center items-center pt-5">
             <ColorPicker
               value={currentColor}
               onComplete={(color) => setColorCategory(color)}
+              style={{ gap: 10, flexDirection: "column", alignItems: "center", justifyContent: "center" }}
             >
-              {/* <Preview /> */}
-              <Panel1 style={{ borderRadius: 9999, width: 200, height: 200, overflow: "hidden"}} />
-              <HueSlider />
-              {/* <Swatches /> */}
+              <Panel1 style={{ width: 150, height: 150, overflow: "hidden"}} boundedThumb />
+              <HueSlider style={{width: 200}} />
+              <Swatches />
             </ColorPicker>
           </View>
         </ThemedAnimatedView>
