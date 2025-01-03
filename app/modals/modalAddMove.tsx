@@ -119,7 +119,29 @@ export default function modalAddMove() {
       ]);
 
       if (error) Alert.alert("Errore Movimento", error.message);
-      else router.back();
+      else {
+        if (type === "Uscita") {
+          const { data, error } = await supabase
+          .from("budgets")
+          .select("*")
+          .eq("category", category!.id);
+          
+          if (error) Alert.alert("Errore Movimento", error.message);
+          
+          if (data && data.length > 0) { 
+            const { data: budgets, error: e } = await supabase
+            .from("budgets")
+            .update({
+              current_amount: data[0].current_amount - parseFloat(value),
+            })
+            .eq("category", category!.id);
+            
+            if (e) Alert.alert("Errore Movimento", e.message);
+          }
+        }
+
+        router.back();
+      }
     }
   };
 

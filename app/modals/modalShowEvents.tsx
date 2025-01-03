@@ -100,7 +100,7 @@ export default function modalShowEvents() {
         typeView="text"
       />
 
-      <ThemedText className="w-full px-5 pt-7 text-3xl underline text-left opacity-50">
+      <ThemedText className="w-full px-5 pt-7 text-3xl underline text-center opacity-70">
           {events[0]?.date}
         </ThemedText>
       

@@ -14,11 +14,8 @@ import {
   withSpring,
 } from "react-native-reanimated";
 import ColorPicker, {
-  Panel1,
   Swatches,
   Preview,
-  OpacitySlider,
-  HueSlider,
   returnedResults,
 } from "reanimated-color-picker";
 
@@ -151,7 +148,7 @@ export default function modalShowEvents() {
             typeView="secondary"
             className="w-full fixed top-6 rounded-t-3xl"
           >
-            <ThemedText className="w-full px-5 text-3xl text-left opacity-50">
+            <ThemedText className="w-full px-5 text-3xl text-center opacity-70">
               Gestisci categorie
             </ThemedText>
 
@@ -207,7 +204,7 @@ export default function modalShowEvents() {
             className="w-full fixed top-6 px-6 rounded-t-3xl"
           >
             <View className="w-full flex flex-row justify-between items-center ">
-              <ThemedText className="text-3xl  opacity-50">
+              <ThemedText className="text-3xl opacity-70">
                 Nuova categoria
               </ThemedText>
 
@@ -228,7 +225,7 @@ export default function modalShowEvents() {
                 placeholder="Nome categoria"
                 value={newCategoryName}
                 setValue={(name) => setNewCategoryName(name)}
-                modal={false}
+                modal={true}
               />
             </View>
 

@@ -75,7 +75,7 @@ export default function RootLayout() {
             }}
           />
           <Stack.Screen
-            name="modals/modalStats"
+            name="modals/modalBudget"
             options={{
               presentation: "modal",
               headerShown: false,

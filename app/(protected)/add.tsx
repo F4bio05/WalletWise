@@ -1,13 +1,12 @@
+import React from "react";
+
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import React from "react";
 
 export default function Add() {
   return (
-    <ThemedView className="flex-1 justify-center items-center">
-      <ThemedText>
-        Add Page
-      </ThemedText>
+    <ThemedView className="h-full flex flex-col justify-start items-center rounded-t-3xl">
+      <ThemedText>ModalBudget</ThemedText>
     </ThemedView>
   )
 }

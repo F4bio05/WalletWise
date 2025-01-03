@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { HeaderBar } from "@/components/HeaderBar";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { ButtonListCategories } from "@/components/ButtonListCategories";
 import { categoriesType, categoryType } from "@/types/categories";
 import { useSupabase } from "@/context/supabaseProvider";
@@ -14,12 +14,13 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedAnimatedView } from "@/components/ThemedAnimatedView";
 import { MyButton } from "@/components/MyButton";
 import { router } from "expo-router";
+import { itemsSupabaseType } from "@/constants/calendar";
 
 export default function Categories() {
   const { supabase } = useSupabase();
   const [currentCategory, setCurrentCategory] = useState<categoryType>();
   const [categories, setCategories] = useState<categoriesType>([]);
-  const [movements, setMovements] = useState<any[]>([]);
+  const [movements, setMovements] = useState<itemsSupabaseType>([]);
   const [indexList, setIndexList] = useState<boolean[]>(); // List of opened index
 
   const { theme } = useContext(ThemeContext);
@@ -130,11 +131,11 @@ export default function Categories() {
         />
       </View>
 
-      <AnimatedScroll className="mb-52 px-5 ">
+      <ScrollView className="w-full h-4/6 mb-52 px-5" contentContainerClassName="gap-5">
         {
           // here we will render the movements
           movements.map(
-            (movement, index) => (
+            ( movement , index ) => (
               // console.log(movement),
               (
                 <PlatformPressable
@@ -152,14 +153,14 @@ export default function Categories() {
                   >
                     <View className="flex flex-col justify-center items-start gap-2">
                       <ThemedText className="text-xl font-bold">
-                        {movement.name}
+                        {movement?.name}
                       </ThemedText>
                       <ThemedText className="text-lg opacity-50">
-                        {movement.date}
+                        {movement?.date}
                       </ThemedText>
                     </View>
-                    <ThemedText className="text-xl">
-                      {parseFloat(movement.amount).toFixed(2)} €
+                    <ThemedText className="text-xl font-bold"  typeText={movement?.type === "Entrata" ? "green" : "red"}>
+                      {parseFloat(movement?.amount?.toString() || "0").toFixed(2)} €
                     </ThemedText>
                   </ThemedView>
                   <View
@@ -171,7 +172,7 @@ export default function Categories() {
                     }}
                   >
                     <ThemedText className="text-lg">
-                      {movement.description}
+                      {movement?.description}
                     </ThemedText>
                   </View>
                 </PlatformPressable>
@@ -179,7 +180,7 @@ export default function Categories() {
             )
           )
         }
-      </AnimatedScroll>
+      </ScrollView>
 
       <View className="w-full px-20 relative bottom-[12.5rem]">
         <MyButton title="Gestisci categorie"  onPress={() => {router.push("/modals/modalCategory")}} />

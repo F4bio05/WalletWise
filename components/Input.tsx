@@ -47,7 +47,7 @@ export function Input({
 
   const colorButton = useThemeColor(
     { theme: theme },
-    modal ? "text" : "secondary"
+    "secondary"
   );
 
   return (
@@ -58,7 +58,7 @@ export function Input({
         </View>
       ) : null}
       <TextInput
-        style={{ color: colorText, backgroundColor: colorButton, fontSize: 20, fontFamily: "Lexend" }}
+        style={{ color: colorText, backgroundColor: colorButton, fontSize: 20, fontFamily: "Lexend", borderBottomColor: modal ? colorText: "transparent", borderBottomWidth: modal ? 1 : 0, }}
         value={value}
         onChangeText={setValue}
         placeholder={placeholder}
